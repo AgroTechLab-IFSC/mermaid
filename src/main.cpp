@@ -1,18 +1,21 @@
 #include <Arduino.h>
+#include <ESP8266WiFi.h>
+#include "main.h"
+#include "led.h"
 
-// put function declarations here:
-int myFunction(int, int);
+unsigned long led_last_time = 0;
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  Serial.begin(SERIAL_BAUDRATE);
+  pinMode(LED_PIN, OUTPUT);
+  pinMode(SPEAKER_PIN, OUTPUT);
+  print_init_info();
+  WiFi.softAP(wifi_ssid, wifi_password, wifi_channel, 0, 1);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  if (millis() - led_last_time >= LED_INTERVAL) {
+    led_last_time = millis();
+    led_blink();
+  }
 }
